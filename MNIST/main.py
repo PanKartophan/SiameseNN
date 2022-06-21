@@ -1,3 +1,9 @@
+###############################################
+# Copyright © 2022. All rights reserved
+# Author: Aliaksei Krautsou
+# Contacts: <aleksei.kravtsov@chemistry.msu.ru>
+# File: constants.py
+###############################################
 """
 Main program with train/validation loops of siamese NN for MNIST dataset classification.
 """

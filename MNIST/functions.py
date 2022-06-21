@@ -1,3 +1,9 @@
+###############################################
+# Copyright © 2022. All rights reserved
+# Author: Aliaksei Krautsou
+# Contacts: <aleksei.kravtsov@chemistry.msu.ru>
+# File: constants.py
+###############################################
 import matplotlib.pyplot as plt
 import random
 import torch
