@@ -1,6 +1,10 @@
-seed = 42
-batch_size = 32
-embedding_dims = 2
-epochs = 70
-lr = 5.e-4
-dataset_path = './dataset/'
+"""
+Initializes constants.
+"""
+
+SEED = 42
+BATCH_SIZE = 32
+EMBEDDING_DIMS = 2
+EPOCHS = 70
+LR = 5.e-4
+DATASET_PATH = './dataset/'
