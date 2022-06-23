@@ -96,6 +96,6 @@ class Network(nn.Module):
         embeddings = self.forward(x)
         distances = torch.zeros(x.size(0), self.class_embeddings_num.size(0))
         for i in range(len(embeddings)):
-            distances[i] = (self.class_embeddings / self.class_embeddings_num.unsqueeze(dim=1) -
-                            embeddings[i].unsqueeze(dim=0)).pow(2).sum(dim=1)
+            distances[i] = torch.sqrt((self.class_embeddings / self.class_embeddings_num.unsqueeze(dim=1) -
+                            embeddings[i].unsqueeze(dim=0)).pow(2).sum(dim=1))
         return torch.argmin(distances, dim=1)

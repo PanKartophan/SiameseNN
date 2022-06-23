@@ -14,6 +14,7 @@ import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import seaborn as sns
 import torch
 import torch.optim as optim
 from torchvision import transforms
@@ -62,7 +63,7 @@ criterion = TripletLoss()
 
 # Define dictionary for loss function values at each train/validation epoch.
 losses = {'train': [], 'val': []}
-for epoch in tqdm(range(EPOCHS), desc="Train/Val Epochs"):
+for epoch in tqdm(range(EPOCHS), desc="Train/Val Epochs", position=0):
     train_loss = 0.
     model.train()
     # Train model.
@@ -105,9 +106,9 @@ with torch.no_grad():
         train_embeddings.append(model(img.to(device)).cpu().numpy())
         labels.append(label)
 
-    # Evaluate embeddings corresponding to each class and number
-    # of embedding vectors that generate (by summing) embeddings corresponding to each class.
-    model.calc_class_embeddings(img.to(device), label.to(device))
+        # Evaluate embeddings corresponding to each class and number
+        # of embedding vectors that generate (by summing) embeddings corresponding to each class.
+        model.calc_class_embeddings(img.to(device), label.to(device))
     # Calculate normalized embeddings of each class.
     class_embeddings = model.class_embeddings.cpu().numpy() / np.expand_dims(
                                                                 model.class_embeddings_num.cpu().numpy(), 1)
@@ -151,3 +152,20 @@ plt.scatter(class_embeddings[:, 0], class_embeddings[:, 1], s=300, marker='>', c
 plt.legend()
 plt.show()
 
+# Evaluate distances between anchors and positives, anchors and negatives
+dist = {'positive': [], 'negative': []}
+model.eval()
+with torch.no_grad():
+    for anchor_img, positive_img, negative_img, label in train_loader:
+        anchor_emb = model(anchor_img.to(device)).cpu()
+        positive_emb = model(positive_img.to(device)).cpu()
+        negative_emb = model(negative_img.to(device)).cpu()
+        dist['positive'].append(torch.sqrt((anchor_emb - positive_emb).pow(2).sum(dim=1)))
+        dist['negative'].append(torch.sqrt((anchor_emb - negative_emb).pow(2).sum(dim=1)))
+    dist['positive'] = torch.hstack(dist['positive'])
+    dist['negative'] = torch.hstack(dist['negative'])
+
+# Plot distance distribution
+ax = sns.displot(dist, kde=True, stat='density')
+ax.set(xlabel='Pairwise distance')
+plt.show()

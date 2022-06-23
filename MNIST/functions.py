@@ -69,7 +69,7 @@ class TripletLoss(nn.Module):
     @staticmethod
     def calc_euclidean(x1, x2):
         """
-        Calculates squared distances between embeddings containing in two sets (batches).
+        Calculates distances between embeddings containing in two sets (batches).
         Parameters
         ----------
         x1: torch.tensor of shape (N, embedding_dims).
@@ -79,10 +79,10 @@ class TripletLoss(nn.Module):
         Returns
         -------
         torch.tensor of shape (N, ).
-            Squared distances between embeddings.
+            Distances between embeddings.
         """
 
-        return (x1 - x2).pow(2).sum(dim=1)
+        return torch.sqrt((x1 - x2).pow(2).sum(dim=1))
 
     def forward(self, anchor: torch.Tensor, positive: torch.Tensor, negative: torch.Tensor) -> torch.Tensor:
         """
